@@ -19,12 +19,16 @@ def proof_of_work(last_proof):
     - p is the previous proof, and p' is the new proof
     - Use the same method to generate SHA-256 hashes as the examples in class
     """
-
+    last_hash_string = f"{last_proof}".encode()
+    last_hash_hex = hashlib.sha256(last_hash_string).hexdigest()
     start = timer()
 
     print("Searching for next proof")
-    proof = 0
-    #  TODO: Your code here
+    proof = last_proof
+
+    print(last_proof)
+    while valid_proof(last_hash_hex, proof) == False:
+        proof += 0.1
 
     print("Proof found: " + str(proof) + " in " + str(timer() - start))
     return proof
@@ -39,8 +43,15 @@ def valid_proof(last_hash, proof):
     IE:  last_hash: ...AE9123456, new hash 123456E88...
     """
 
-    # TODO: Your code here!
-    pass
+    block_string = f"{last_hash}{proof}".encode()
+
+    hex_hash = hashlib.sha256(block_string).hexdigest()
+
+    prev_hash_chars = last_hash[58:]
+
+    new_hash_chars = hex_hash[:6]
+
+    return prev_hash_chars == new_hash_chars
 
 
 if __name__ == '__main__':
